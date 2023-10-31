@@ -1,0 +1,26 @@
+const BaseBtn = ({ text, onClick, type }) => {
+  const BtnType = ["fix", "del"].includes(type) ? type : "default";
+  return (
+    <div>
+      <button
+        className={`text-xl whitespace-nowrap border
+         border-black rounded-md min-w-[50px] h-[30px] ${
+           BtnType === "fix"
+             ? `bg-sky-500`
+             : BtnType === "default"
+             ? `bg-gray-100`
+             : BtnType === "del"
+             ? ` bg-red-400`
+             : `null`
+         } `}
+        onClick={onClick}
+      > 
+        {text}
+      </button>
+    </div>
+  );
+};
+BaseBtn.defaultProps = {
+  type: "default",
+};
+export default BaseBtn;
