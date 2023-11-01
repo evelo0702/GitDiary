@@ -5,8 +5,9 @@ import HomePage from "./pages/HomePage";
 import NewPage from "./pages/NewPage";
 import DetailPage from "./pages/DetailPage";
 import EditPage from "./pages/EditPage";
-import Header from "./components/Header";
 import SideBar from "./components/SideBar";
+import ListPage from "./pages/ListPage";
+
 const reducer = (state, action) => {
   let newState = [];
   switch (action.type) {
@@ -34,9 +35,66 @@ const reducer = (state, action) => {
 };
 export const StateContext = React.createContext();
 export const DispatchContext = React.createContext();
-
+const dummyData = [
+  {
+    id: 1,
+    lang: "js",
+    date: new Date(2023, 10, 30, 3, 24, 0).getTime(),
+    content: "안녕하세요1",
+    title: "1번째입니다",
+    link: "http://www.naver.com",
+  },
+  {
+    id: 2,
+    lang: "js",
+    date: new Date(2023, 10, 30, 5, 25, 0).getTime(),
+    content: "안녕하세요2",
+    title: "2번째입니다",
+    link: "http://www.naver.com",
+  },
+  {
+    id: 3,
+    lang: "css",
+    date: new Date(2023, 10, 30, 2, 20, 0).getTime(),
+    content: "안녕하세요3",
+    title: "3번째입니다",
+    link: "http://www.naver.com",
+  },
+  {
+    id: 4,
+    lang: "python",
+    date: new Date(2023, 10, 30, 17, 0, 0).getTime(),
+    content: "안녕하세요4",
+    title: "4번째입니다",
+    link: "",
+  },
+  {
+    id: 5,
+    lang: "ts",
+    date: new Date(2023, 10, 30, 1, 25, 0).getTime(),
+    content: "안녕하세요5",
+    title: "5번째입니다",
+    link: "http://www.naver.com",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 7,
+    lang: "vue",
+    date: new Date(2023, 11, 1, 13, 10, 0).getTime(),
+    content: "안녕하세요7",
+    title: "7번째입니다",
+    link: "",
+  },
+];
 function App() {
-  const [data, dispatch] = useReducer(reducer, []);
+  const [data, dispatch] = useReducer(reducer, dummyData);
   const dataId = useRef(0);
 
   // CREATE
@@ -84,11 +142,11 @@ function App() {
             >
               <SideBar />
               <div className="text-4xl sm:w-2/3 bg-white shadow-cus min-h-[100vh] min-w-[180px] px-10 py-10">
-                <Header />
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/New" element={<NewPage />} />
-                  <Route path="/Edit" element={<EditPage />} />
+                  <Route path="/List" element={<ListPage />} />
+                  <Route path="/Edit/:id" element={<EditPage />} />
                   <Route path="/Detail/:id" element={<DetailPage />} />
                 </Routes>
               </div>

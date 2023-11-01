@@ -11,8 +11,8 @@ const SideBar = () => {
         New
       </Link>
 
-      <Link className="mx-4" to={"/Edit"}>
-        Edit
+      <Link className="mx-4" to={"/List"}>
+        List
       </Link>
     </div>
   );
