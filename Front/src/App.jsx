@@ -92,6 +92,14 @@ const dummyData = [
     title: "7번째입니다",
     link: "",
   },
+  {
+    id: 8,
+    lang: "vue",
+    date: new Date(2023, 10, 11, 13, 10, 0).getTime(),
+    content: "안녕하세요8",
+    title: "8번째입니다",
+    link: "",
+  },
 ];
 function App() {
   const [data, dispatch] = useReducer(reducer, dummyData);

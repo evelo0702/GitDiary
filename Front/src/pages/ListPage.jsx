@@ -2,13 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import BaseBtn from "../components/BaseBtn";
 import Header from "../components/Header";
 import ListCard from "../components/ListCard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StateContext } from "../App";
 import SortMenu from "../components/SortMenu";
 
 const ListPage = () => {
   const diaryData = useContext(StateContext);
-  console.log(diaryData);
+  const navigate = useNavigate();
+
   const [date, setDate] = useState(new Date());
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
@@ -67,7 +68,6 @@ const ListPage = () => {
       name: "HTML",
     },
   ];
-
   // 날짜 변경
   const dateKor = `${date.getFullYear()}년 ${date.getMonth() + 1}월 `;
   const nextMonth = () => {
@@ -108,16 +108,16 @@ const ListPage = () => {
 
   // sort
   useEffect(() => {
-    const latest = [...data].sort((a, b) => {
+    const latest = [...originalData].sort((a, b) => {
       if (a.date > b.date) return 1;
       if (a.date < b.date) return -1;
     });
-    const oldest = [...data].sort((a, b) => {
+    const oldest = [...originalData].sort((a, b) => {
       if (a.date < b.date) return 1;
       if (a.date > b.date) return -1;
     });
 
-    if (data.length > 0) {
+    if (originalData.length > 0) {
       if (sort === "latest") {
         setData(latest);
       }
@@ -125,7 +125,7 @@ const ListPage = () => {
         setData(oldest);
       }
     }
-  }, [sort]);
+  }, [originalData, sort]);
   // langSort
   useEffect(() => {
     if (langSort !== "all") {
@@ -153,21 +153,25 @@ const ListPage = () => {
           langChange={setLangSort}
           langSortOption={langSortOption}
         />
-        <Link
+        <button
           className="bg-indigo-300 hover:bg-indigo-950 whitespace-nowrap border w-1/4
         rounded-lg text-white p-1"
-          to={"/New"}
+          onClick={() => navigate("/new")}
         >
           <p className="text-center">새 글 작성</p>
-        </Link>
+        </button>
       </div>
       <div
         className="h-[82vh] flex flex-wrap justify-center 
        overflow-y-auto"
       >
-        {data.map((item, index) => (
-          <ListCard item={item} key={index} />
-        ))}
+        {data.length > 0 ? (
+          data.map((item, index) => <ListCard item={item} key={index} />)
+        ) : (
+          <div className="flex justify-center items-center">
+            작성한 일기가 없습니다
+          </div>
+        )}
       </div>
     </div>
   );

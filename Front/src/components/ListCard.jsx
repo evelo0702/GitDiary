@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const ListCard = ({ item }) => {
   const dateKor = `${new Date(item.date).getFullYear()}년 ${
     new Date(item.date).getMonth() + 1
@@ -20,11 +22,13 @@ const ListCard = ({ item }) => {
         <p className="text-2xl flex justify-center items-center">
           {dateKor}
           {item.link !== "" && (
-            <img
-              className="object-contain h-4 w-4 ms-1 mb-1"
-              src={import.meta.env.BASE_URL + `src/assets/github.png`}
-              alt=""
-            />
+            <a href={item.link} target="_blank" rel="noreferrer">
+              <img
+                className="object-contain h-4 w-4 ms-1 mb-1"
+                src={import.meta.env.BASE_URL + `src/assets/github.png`}
+                alt=""
+              />
+            </a>
           )}
         </p>
       </div>
