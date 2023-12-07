@@ -24,6 +24,7 @@ app.listen(PORT, () => {
 app.use(express.json());
 app.use(cors());
 app.use("/diary", require("./routes/diary"));
+app.use("/login", require("./routes/login"));
 app.use(express.static(path.join(__dirname, "../uploads")));
 
 app.get("/", (req, res) => {
