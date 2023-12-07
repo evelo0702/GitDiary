@@ -7,6 +7,7 @@ import DetailPage from "./pages/DetailPage";
 import EditPage from "./pages/EditPage";
 import SideBar from "./components/SideBar";
 import ListPage from "./pages/ListPage";
+import LoginPage from "./pages/LoginPage";
 
 const reducer = (state, action) => {
   let newState = [];
@@ -73,8 +74,104 @@ const dummyData = [
     lang: "ts",
     date: new Date(2023, 10, 30, 1, 25, 0).getTime(),
     content: "안녕하세요5",
-    title: "5번째입니다",
+    title: "555555555555555555555555번째입니다",
     link: "http://www.naver.com",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
+  },
+  {
+    id: 6,
+    lang: "vue",
+    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
+    content: "안녕하세요6",
+    title: "6번째입니다",
+    link: "",
   },
   {
     id: 6,
@@ -149,13 +246,14 @@ function App() {
        m-0"
             >
               <SideBar />
-              <div className="text-4xl sm:w-2/3 bg-white shadow-cus min-h-[100vh] min-w-[180px] px-10 py-10">
+              <div className="text-4xl sm:w-5/6 bg-white shadow-cus min-h-[100vh] min-w-[180px] px-10 py-10">
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/New" element={<NewPage />} />
                   <Route path="/List" element={<ListPage />} />
                   <Route path="/Edit/:id" element={<EditPage />} />
                   <Route path="/Detail/:id" element={<DetailPage />} />
+                  <Route path="/Login" element={<LoginPage />} />
                 </Routes>
               </div>
             </div>

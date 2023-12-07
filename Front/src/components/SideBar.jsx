@@ -14,6 +14,9 @@ const SideBar = () => {
       <Link className="mx-4" to={"/List"}>
         List
       </Link>
+      <Link className="mx-4" to={"/Login"}>
+        Login
+      </Link>
     </div>
   );
 };

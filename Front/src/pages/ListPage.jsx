@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import BaseBtn from "../components/BaseBtn";
 import Header from "../components/Header";
 import ListCard from "../components/ListCard";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { StateContext } from "../App";
 import SortMenu from "../components/SortMenu";
 
@@ -68,7 +68,7 @@ const ListPage = () => {
       name: "HTML",
     },
   ];
-  // 날짜 변경
+  // 날짜 변경    
   const dateKor = `${date.getFullYear()}년 ${date.getMonth() + 1}월 `;
   const nextMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() + 1));
@@ -137,12 +137,12 @@ const ListPage = () => {
     }
   }, [originalData, langSort]);
   return (
-    <div className="h-[90vh]">
+    <div className="h-[90vh] w-full">
       ListPage
       <Header
         centerText={dateKor}
-        leftBtn={<BaseBtn text={"<"} onClick={prevMonth} />}
-        rightBtn={<BaseBtn text={">"} onClick={nextMonth} />}
+        leftBtn={<BaseBtn text={"<"} onClick={prevMonth} size={"small"} />}
+        rightBtn={<BaseBtn text={">"} onClick={nextMonth} size={"small"} />}
       />
       <div className="w-full mx-auto  flex justify-between text-xl">
         <SortMenu
@@ -162,8 +162,8 @@ const ListPage = () => {
         </button>
       </div>
       <div
-        className="h-[82vh] flex flex-wrap justify-center 
-       overflow-y-auto"
+        className="h-[82vh] flex flex-wrap justify-center
+         overflow-y-auto mt-4"
       >
         {data.length > 0 ? (
           data.map((item, index) => <ListCard item={item} key={index} />)
