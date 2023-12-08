@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useLocation } from "react-router-dom";
 import BaseBtn from "./BaseBtn";
 import MarkdownRender from "./MarkdownRender";
+import axios from "axios";
 
 const getStringDate = (date) => {
   return date.toISOString().slice(0, 10);
@@ -12,20 +13,28 @@ public class BootSpringBootApplication {
   console.log("BYE!!!!")
 }`;
 
-const Editor = () => {
+const Editor = ({ gitData }) => {
   let location = useLocation().pathname;
   const [haveGit, setHaveGit] = useState(false);
-  const [newDate, setNewDate] = useState({
+  const [newData, setNewData] = useState({
     date: getStringDate(new Date()),
     lang: "",
     title: "",
+    repo: "",
     link: "",
     content: "",
     code: "",
   });
-  const handleDate = (type, value) => {
-    const copyDate = { ...newDate, [type]: value };
-    setNewDate(copyDate);
+  const handleData = (type, value) => {
+    const copyDate = { ...newData, [type]: value };
+    setNewData(copyDate);
+  };
+  const getCommitData = async () => {
+    handleData("link", `https://github.com/${gitData[0].id}/${newData.repo}`);
+    // const commitData = await axios.get(
+    //   `https://api.github.com/repos/${gitData[0].id}/${newData.link}/commits`
+    // );
+    // console.log(commitData);
   };
 
   const langSortOption = [
@@ -84,11 +93,11 @@ const Editor = () => {
             {location === "/New" ? (
               <input
                 type="date"
-                value={newDate.date}
-                onChange={(e) => handleDate("date", e.target.value)}
+                value={newData.date}
+                onChange={(e) => handleData("date", e.target.value)}
               />
             ) : (
-              <div>{newDate.date}</div>
+              <div>{newData.date}</div>
             )}
           </div>
           <div className="flex">
@@ -118,25 +127,57 @@ const Editor = () => {
               X
             </label>
           </div>
+          <p className="text-xl text-gray-500">
+            public 저장소만 선택 가능합니다
+          </p>
           {haveGit == "true" ? (
-            <input
-              type="text"
-              placeholder="github link"
-              className="p-1  mb-2 w-3/4"
-              onChange={(e) => handleDate("link", e.target.value)}
-            />
+            <div>
+              <select
+                className="p-2 text-2xl"
+                onChange={(e) => handleData("repo", e.target.value)}
+              >
+                <option value="none">레포지토리 선택</option>
+                {gitData[0].repo.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+
+              {newData.repo !== "" && newData.repo !== "none" && (
+                <select
+                  className="p-2 text-2xl"
+                  onChange={(e) =>
+                    handleData(
+                      "link",
+                      `https://github.com/${gitData[0].id}/${e.target.value}`
+                    )
+                  }
+                >
+                  <option value="none">레포지토리 선택</option>
+                  {gitData[0].repo.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
           ) : null}
         </div>
+        {newData.repo}
+        <hr />
+        {newData.link}
         <div>
           <input
             className="p-1  mb-2 me-2 w-3/4"
             type="text"
             placeholder="제목"
-            onChange={(e) => handleDate("title", e.target.value)}
+            onChange={(e) => handleData("title", e.target.value)}
           />
           <select
             className="p-2 text-2xl"
-            onChange={(e) => handleDate("lang", e.target.value)}
+            onChange={(e) => handleData("lang", e.target.value)}
           >
             <option>언어선택</option>
             {langSortOption.map((item) => (
@@ -145,14 +186,15 @@ const Editor = () => {
               </option>
             ))}
           </select>
-        </div>{" "}
+        </div>
+
         <textarea
           name=""
           id=""
           rows="3"
           className="w-full p-4 text-xl border-2 border-gray-400 rounded-md"
           placeholder="코드 입력"
-          onChange={(e) => handleDate("code", e.target.value)}
+          onChange={(e) => handleData("code", e.target.value)}
         ></textarea>
         <textarea
           name=""
@@ -160,7 +202,7 @@ const Editor = () => {
           rows="10"
           placeholder="일기 본문 입력"
           className="w-full p-4 border-2 border-gray-400 rounded-md"
-          onChange={(e) => handleDate("content", e.target.value)}
+          onChange={(e) => handleData("content", e.target.value)}
         ></textarea>
         <button
           className="border-2 border-gray-200 rounded-lg p-0.5"
@@ -168,7 +210,7 @@ const Editor = () => {
         >
           미리보기
         </button>
-        {markdownOn && <MarkdownRender newDate={newDate} />}
+        {markdownOn && <MarkdownRender newData={newData} />}
         <div className="flex justify-end">
           <BaseBtn text="일기 저장" size={"normal"} onClick={handleSubmit} />
           <BaseBtn text="취소" size={"normal"} type={"del"} />

@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
+
 router.post("/", async (req, res) => {
   const { code } = req.body;
-  console.log(req.body.code);
   const data = {
     client_id: process.env.VITE_GITHUB_CLIENT_ID,
     code: req.body.code,
@@ -18,14 +18,21 @@ router.post("/", async (req, res) => {
       },
     }
   );
-  console.log(result.data.access_token);
   const githubData = await axios.get("https://api.github.com/user", {
     headers: {
       Authorization: `Bearer ${result.data.access_token}`,
       accept: "application/json",
     },
   });
-  console.log(githubData.data);
+  const repo = await axios.get(githubData.data.repos_url);
+  const sendGitData = [
+    {
+      id: githubData.data.login,
+      img: githubData.data.avatar_url,
+      repo: repo.data.map((item) => item.name),
+    },
+  ];
+  res.json(sendGitData);
 });
 
 module.exports = router;

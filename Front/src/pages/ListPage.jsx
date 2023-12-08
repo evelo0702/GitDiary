@@ -7,7 +7,7 @@ import { StateContext } from "../App";
 import SortMenu from "../components/SortMenu";
 
 const ListPage = () => {
-  const diaryData = useContext(StateContext);
+  const { diaryData } = useContext(StateContext);
   const navigate = useNavigate();
 
   const [date, setDate] = useState(new Date());
@@ -68,7 +68,7 @@ const ListPage = () => {
       name: "HTML",
     },
   ];
-  // 날짜 변경    
+  // 날짜 변경
   const dateKor = `${date.getFullYear()}년 ${date.getMonth() + 1}월 `;
   const nextMonth = () => {
     setDate(new Date(date.getFullYear(), date.getMonth() + 1));

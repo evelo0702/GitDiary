@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useReducer, useRef } from "react";
+import React, {  useReducer, useRef, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NewPage from "./pages/NewPage";
@@ -198,10 +198,16 @@ const dummyData = [
     link: "",
   },
 ];
+
 function App() {
-  const [data, dispatch] = useReducer(reducer, dummyData);
+  const [diaryData, dispatch] = useReducer(reducer, dummyData);
   const dataId = useRef(0);
 
+  const [gitData, setGitData] = useState([
+    {
+      id: 1,
+    },
+  ]);
   // CREATE
   const onCreate = (date, content, title, link, lang) => {
     dispatch({
@@ -237,7 +243,7 @@ function App() {
   };
 
   return (
-    <StateContext.Provider value={data}>
+    <StateContext.Provider value={{ diaryData, gitData, setGitData }}>
       <DispatchContext.Provider value={{ onCreate, onEdit, onRemove }}>
         <BrowserRouter>
           <div className=" bg-black">
