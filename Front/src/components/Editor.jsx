@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import BaseBtn from "./BaseBtn";
 import MarkdownRender from "./MarkdownRender";
@@ -24,17 +24,39 @@ const Editor = ({ gitData }) => {
     link: "",
     content: "",
     code: "",
+    commit: "",
   });
+  const [commitList, setCommitList] = useState([]);
   const handleData = (type, value) => {
     const copyDate = { ...newData, [type]: value };
     setNewData(copyDate);
+
+    if (type === "repo") {
+      const copyDate2 = {
+        ...newData,
+        repo: value,
+        link: `https://github.com/${gitData[0].id}/${value}`,
+      };
+      setNewData(copyDate2);
+      getCommitData(copyDate2, value);
+    }
   };
-  const getCommitData = async () => {
-    handleData("link", `https://github.com/${gitData[0].id}/${newData.repo}`);
-    // const commitData = await axios.get(
-    //   `https://api.github.com/repos/${gitData[0].id}/${newData.link}/commits`
-    // );
-    // console.log(commitData);
+  const getCommitData = async (copyDate2, value) => {
+    const commitData = await axios.get(
+      `https://api.github.com/repos/${gitData[0].id}/${value}/commits`
+    );
+    if (commitData.data) {
+      const commit = commitData.data.map((item, index) => [
+        {
+          id: index,
+          date: item.commit.author.date,
+          author: item.commit.author.name,
+          url: item.html_url,
+          msg: item.commit.message,
+        },
+      ]);
+      setCommitList(commit);
+    }
   };
 
   const langSortOption = [
@@ -83,7 +105,20 @@ const Editor = ({ gitData }) => {
     // 제목 작성을 안했을때
     // 언어 선택을 안했을때
     // 본문 글이 10글자 이내일때
+    if (!newData.title) {
+      alert("제목을 입력해주세요");
+    }
+    if (!newData.content) {
+      alert("본문을 입력해주세요");
+    }
+    if (!newData.lang) {
+      alert("언어를 선택해주세요");
+    }
+    if (newData.content.length < 10) {
+      alert("본문은 10글자 이상을 입력해주세요");
+    }
   };
+
   const [markdownOn, setMarkdown] = useState(false);
   return (
     <div>
@@ -148,26 +183,22 @@ const Editor = ({ gitData }) => {
                 <select
                   className="p-2 text-2xl"
                   onChange={(e) =>
-                    handleData(
-                      "link",
-                      `https://github.com/${gitData[0].id}/${e.target.value}`
-                    )
+                    handleData("commit", JSON.parse(e.target.value))
                   }
                 >
-                  <option value="none">레포지토리 선택</option>
-                  {gitData[0].repo.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
+                  <option value="none">커밋 선택</option>
+                  {commitList &&
+                    commitList.map((item) => (
+                      <option key={item[0].id} value={JSON.stringify(item[0])}>
+                        {item[0].msg}
+                      </option>
+                    ))}
                 </select>
               )}
             </div>
           ) : null}
         </div>
-        {newData.repo}
-        <hr />
-        {newData.link}
+
         <div>
           <input
             className="p-1  mb-2 me-2 w-3/4"
@@ -179,7 +210,7 @@ const Editor = ({ gitData }) => {
             className="p-2 text-2xl"
             onChange={(e) => handleData("lang", e.target.value)}
           >
-            <option>언어선택</option>
+            <option value={""}>언어선택</option>
             {langSortOption.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.name}
@@ -204,13 +235,13 @@ const Editor = ({ gitData }) => {
           className="w-full p-4 border-2 border-gray-400 rounded-md"
           onChange={(e) => handleData("content", e.target.value)}
         ></textarea>
-        <button
+        {/* <button
           className="border-2 border-gray-200 rounded-lg p-0.5"
           onClick={() => setMarkdown(!markdownOn)}
         >
           미리보기
         </button>
-        {markdownOn && <MarkdownRender newData={newData} />}
+        {markdownOn && <MarkdownRender newData={newData} />} */}
         <div className="flex justify-end">
           <BaseBtn text="일기 저장" size={"normal"} onClick={handleSubmit} />
           <BaseBtn text="취소" size={"normal"} type={"del"} />

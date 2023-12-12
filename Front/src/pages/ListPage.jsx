@@ -8,6 +8,7 @@ import SortMenu from "../components/SortMenu";
 
 const ListPage = () => {
   const { diaryData } = useContext(StateContext);
+  console.log(diaryData);
   const navigate = useNavigate();
 
   const [date, setDate] = useState(new Date());

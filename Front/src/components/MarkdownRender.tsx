@@ -2,20 +2,20 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const MarkdownRender = ({ newDate }) => {
+const MarkdownRender = ({ newData }) => {
   const markdown = `A paragraph with *emphasis* and **strong importance**.
+  > A block quote with ~strikethrough~ and a URL: ${newData.link}.
 
-> A block quote with ~strikethrough~ and a URL: ${newDate.link}.
+  ${newData.date} ![Alt text](src/assets/${newData.lang}.png)
+  # ${newData.title}
 
-${newDate.date} ![Alt text](src/assets/${newDate.lang}.png)
-# ${newDate.title} 
+  > ${newData.content}
+  \`\`\`
+  ${newData.code}
+  \`\`\`
 
-
-> ${newDate.content}
-\`\`\`
-${newDate.code}
-\`\`\`
 `;
+
   return (
     <div>
       <ReactMarkdown

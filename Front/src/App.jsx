@@ -1,5 +1,5 @@
 import "./App.css";
-import React, {  useReducer, useRef, useState } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NewPage from "./pages/NewPage";
@@ -86,102 +86,6 @@ const dummyData = [
     link: "",
   },
   {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
-    id: 6,
-    lang: "vue",
-    date: new Date(2023, 10, 30, 13, 10, 0).getTime(),
-    content: "안녕하세요6",
-    title: "6번째입니다",
-    link: "",
-  },
-  {
     id: 7,
     lang: "vue",
     date: new Date(2023, 11, 1, 13, 10, 0).getTime(),
@@ -203,11 +107,7 @@ function App() {
   const [diaryData, dispatch] = useReducer(reducer, dummyData);
   const dataId = useRef(0);
 
-  const [gitData, setGitData] = useState([
-    {
-      id: 1,
-    },
-  ]);
+  const [gitData, setGitData] = useState([{}]);
   // CREATE
   const onCreate = (date, content, title, link, lang) => {
     dispatch({
