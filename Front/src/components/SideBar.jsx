@@ -1,17 +1,50 @@
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import { StateContext } from "../App";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { Octokit } from "@octokit/rest";
+const { VITE_GITHUB_CLIENT_ID, VITE_GITHUB_OCTOKIT_TOKEN } = import.meta.env;
 
 const SideBar = () => {
-  const { gitData } = useContext(StateContext);
-  console.log(gitData[0]);
+  const [access_token, setToken] = useState("");
+  const URL = `https://github.com/login/oauth/authorize?client_id=${VITE_GITHUB_CLIENT_ID}`;
+  const { gitData, setGitData } = useContext(StateContext);
+  useEffect(() => {
+    if (gitData) {
+      setToken(gitData[0].code);
+    }
+  }, [gitData]);
+  // const getData = async () => {
+  //   const octokit = new Octokit({
+  //     auth: VITE_GITHUB_OCTOKIT_TOKEN,
+  //   });
+  //   await octokit
+  //     .request("GET /orgs/{org}/repos", {
+  //       org: "BOOKPROJECT00",
+  //     })
+  //     .then((res) => console.log(res.data));
+  // };
+  const logOut = async () => {
+    // await axios
+    //   .delete("http://localhost:8000/logout", {
+    //     data: { accessToken: access_token },
+    //   })
+    //   .then((res) => console.log(res));
+
+    setGitData("");
+  };
   return (
-    <div className="w-1/3 flex flex-col mt-8 text-4xl font-bold ">
+    <div className="w-1/3 flex flex-col mt-8 text-4xl font-bold items-center">
+      {gitData && (
+        <div className="border-b-2 border-gray-300 flex flex-col items-center mx-2 mb-4">
+          <img src={gitData[0].img} alt="" className="w-1/3 rounded-xl" />
+          <div className="">{gitData[0].id}</div>
+        </div>
+      )}
       <Link className="mx-4" to={"/"}>
         Home
-      </Link>
-
-      {gitData[0].id && (
+      </Link>{" "}
+      {gitData && (
         <>
           <Link className="mx-4" to={"/New"}>
             New
@@ -21,9 +54,20 @@ const SideBar = () => {
           </Link>
         </>
       )}
-      <Link className="mx-4" to={"/Login"}>
-        Login
-      </Link>
+      {!gitData ? (
+        <div className="flex items-center">
+          <img src="src/assets/github.png" alt="" className="w-5 h-5 me-2" />
+          <Link className="mt-1" to={URL}>
+            Login
+          </Link>
+        </div>
+      ) : (
+        <>
+          <Link to={"/"} className="mx-4">
+            <button onClick={() => logOut()}>Logout</button>
+          </Link>
+        </>
+      )}
     </div>
   );
 };

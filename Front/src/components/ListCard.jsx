@@ -1,11 +1,13 @@
+import { Link } from "react-router-dom";
+
 const ListCard = ({ item }) => {
   const dateKor = `${new Date(item.date).getFullYear()}년 ${
     new Date(item.date).getMonth() + 1
   }월 ${new Date(item.date).getDate()}일`;
   return (
-    <div className="p-4 max-h-[30vh]">
+    <Link to={`/detail/${item.id}`} className="p-4 max-h-[30vh]">
       <div className="flex-col h-4/5 flex-wrap border border-black rounded-md">
-        <div className="h-1/3 p-1 my-4">
+        <div className="h-1/4 p-1 my-4">
           {item.lang !== "none" && (
             <img
               className="object-contain h-full w-full"
@@ -18,13 +20,11 @@ const ListCard = ({ item }) => {
           <p className="text-xl flex justify-center items-center">
             {dateKor}
             {item.link !== "" && (
-              <a href={item.link} target="_blank" rel="noreferrer">
-                <img
-                  className="object-contain h-4 w-4 ms-1 mb-1"
-                  src={import.meta.env.BASE_URL + `src/assets/github.png`}
-                  alt=""
-                />
-              </a>
+              <img
+                className="object-contain h-4 w-4 ms-1 mb-1"
+                src={import.meta.env.BASE_URL + `src/assets/github.png`}
+                alt=""
+              />
             )}
           </p>
           <div className="">
@@ -34,7 +34,7 @@ const ListCard = ({ item }) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 ListCard.defaultProps = {

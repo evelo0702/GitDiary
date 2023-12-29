@@ -5,10 +5,11 @@ import ListCard from "../components/ListCard";
 import { useNavigate } from "react-router-dom";
 import { StateContext } from "../App";
 import SortMenu from "../components/SortMenu";
-
+import axios from "axios";
 const ListPage = () => {
-  const { diaryData } = useContext(StateContext);
-  console.log(diaryData);
+  const { diaryData, setDiaryData } = useContext(StateContext);
+  const { gitData } = useContext(StateContext);
+
   const navigate = useNavigate();
 
   const [date, setDate] = useState(new Date());
@@ -16,6 +17,16 @@ const ListPage = () => {
   const [originalData, setOriginalData] = useState([]);
   const [sort, setSort] = useState("latest");
   const [langSort, setLangSort] = useState("all");
+  const getDiaryData = async () => {
+    const result = await axios.get(
+      `http://localhost:8000/diary?author=${gitData[0].id}`
+    );
+    console.log(result.data);
+    setDiaryData(result.data);
+  };
+  useEffect(() => {
+    getDiaryData();
+  }, []);
   const sortOption = [
     {
       value: "latest",
@@ -170,7 +181,7 @@ const ListPage = () => {
           data.map((item, index) => <ListCard item={item} key={index} />)
         ) : (
           <div className="flex justify-center items-center">
-            작성한 일기가 없습니다
+            {dateKor.slice(5)}에 작성한 노트가 없습니다
           </div>
         )}
       </div>

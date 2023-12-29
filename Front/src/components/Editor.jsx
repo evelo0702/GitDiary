@@ -15,30 +15,46 @@ public class BootSpringBootApplication {
 
 const Editor = ({ gitData }) => {
   let location = useLocation().pathname;
+
   const [haveGit, setHaveGit] = useState(false);
   const [newData, setNewData] = useState({
-    date: getStringDate(new Date()),
+    date: new Date().getTime(),
     lang: "",
     title: "",
-    repo: "",
-    link: "",
     content: "",
+    link: "",
+    repo: "",
     code: "",
     commit: "",
+    author: gitData[0].id,
   });
   const [commitList, setCommitList] = useState([]);
   const handleData = (type, value) => {
     const copyDate = { ...newData, [type]: value };
     setNewData(copyDate);
 
+    if (
+      (type == "repo" || type == "link" || type == "commit") &&
+      haveGit == false
+    ) {
+      const copyData2 = {
+        ...newData,
+        repo: "",
+        link: "",
+        commit: "",
+      };
+      return setNewData(copyData2);
+    }
     if (type === "repo") {
-      const copyDate2 = {
+      const copyData2 = {
         ...newData,
         repo: value,
         link: `https://github.com/${gitData[0].id}/${value}`,
       };
-      setNewData(copyDate2);
-      getCommitData(copyDate2, value);
+      setNewData(copyData2);
+      if (value !== "") {
+        getCommitData(copyData2, value);
+      }
     }
   };
   const getCommitData = async (copyDate2, value) => {
@@ -48,7 +64,7 @@ const Editor = ({ gitData }) => {
     if (commitData.data) {
       const commit = commitData.data.map((item, index) => [
         {
-          id: index,
+          commit_id: index,
           date: item.commit.author.date,
           author: item.commit.author.name,
           url: item.html_url,
@@ -56,6 +72,7 @@ const Editor = ({ gitData }) => {
         },
       ]);
       setCommitList(commit);
+      console.log(commit);
     }
   };
 
@@ -101,35 +118,49 @@ const Editor = ({ gitData }) => {
       name: "HTML",
     },
   ];
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // 제목 작성을 안했을때
     // 언어 선택을 안했을때
     // 본문 글이 10글자 이내일때
     if (!newData.title) {
-      alert("제목을 입력해주세요");
+      return alert("제목을 입력해주세요");
     }
     if (!newData.content) {
-      alert("본문을 입력해주세요");
+      return alert("본문을 입력해주세요");
     }
     if (!newData.lang) {
-      alert("언어를 선택해주세요");
+      return alert("언어를 선택해주세요");
     }
     if (newData.content.length < 10) {
-      alert("본문은 10글자 이상을 입력해주세요");
+      return alert("본문은 10글자 이상을 입력해주세요");
     }
+    console.log(newData);
+    const result = await axios.post("http://localhost:8000/diary", {
+      newData,
+    });
+    console.log(result);
   };
 
+  useEffect(() => {
+    if (haveGit == false) {
+      handleData("repo", "");
+      handleData("link", "");
+      handleData("commit", "");
+    }
+  }, [haveGit]);
   const [markdownOn, setMarkdown] = useState(false);
   return (
     <div>
-      <div className="">
+      <div className="px-4">
         <div className="">
           <div className="my-2">
             {location === "/New" ? (
               <input
                 type="date"
-                value={newData.date}
-                onChange={(e) => handleData("date", e.target.value)}
+                value={getStringDate(new Date(newData.date))}
+                onChange={(e) =>
+                  handleData("date", new Date(e.target.value).getTime())
+                }
               />
             ) : (
               <div>{newData.date}</div>
@@ -145,7 +176,7 @@ const Editor = ({ gitData }) => {
                 id="O"
                 value={true}
                 className="mx-2"
-                onChange={(e) => setHaveGit(e.target.value)}
+                onChange={() => setHaveGit(true)}
               />
               O
             </label>
@@ -157,18 +188,19 @@ const Editor = ({ gitData }) => {
                 id="X"
                 value={false}
                 className="mx-2"
-                onChange={(e) => setHaveGit(e.target.value)}
+                onChange={() => setHaveGit(false)}
               />
               X
             </label>
+            <p className="text-xl text-gray-500 mx-4">
+              public 저장소만 선택 가능합니다
+            </p>
           </div>
-          <p className="text-xl text-gray-500">
-            public 저장소만 선택 가능합니다
-          </p>
-          {haveGit == "true" ? (
-            <div>
+
+          {haveGit == true ? (
+            <div className="">
               <select
-                className="p-2 text-2xl"
+                className="text-2xl my-2"
                 onChange={(e) => handleData("repo", e.target.value)}
               >
                 <option value="none">레포지토리 선택</option>
@@ -181,7 +213,7 @@ const Editor = ({ gitData }) => {
 
               {newData.repo !== "" && newData.repo !== "none" && (
                 <select
-                  className="p-2 text-2xl"
+                  className="text-xl flex my-2"
                   onChange={(e) =>
                     handleData("commit", JSON.parse(e.target.value))
                   }
@@ -189,8 +221,15 @@ const Editor = ({ gitData }) => {
                   <option value="none">커밋 선택</option>
                   {commitList &&
                     commitList.map((item) => (
-                      <option key={item[0].id} value={JSON.stringify(item[0])}>
-                        {item[0].msg}
+                      <option
+                        key={item[0].id}
+                        value={JSON.stringify(item[0])}
+                        className=" overflow-auto"
+                      >
+                        {item[0].author} -{" "}
+                        {item[0].msg.length > 60
+                          ? item[0].msg.slice(0, 60) + "....."
+                          : item[0].msg}
                       </option>
                     ))}
                 </select>
@@ -231,19 +270,19 @@ const Editor = ({ gitData }) => {
           name=""
           id=""
           rows="10"
-          placeholder="일기 본문 입력"
+          placeholder="노트 본문 입력"
           className="w-full p-4 border-2 border-gray-400 rounded-md"
           onChange={(e) => handleData("content", e.target.value)}
         ></textarea>
-        {/* <button
+        <button
           className="border-2 border-gray-200 rounded-lg p-0.5"
           onClick={() => setMarkdown(!markdownOn)}
         >
           미리보기
         </button>
-        {markdownOn && <MarkdownRender newData={newData} />} */}
+        {markdownOn && <MarkdownRender newData={newData} />}
         <div className="flex justify-end">
-          <BaseBtn text="일기 저장" size={"normal"} onClick={handleSubmit} />
+          <BaseBtn text="노트 저장" size={"normal"} onClick={handleSubmit} />
           <BaseBtn text="취소" size={"normal"} type={"del"} />
         </div>
       </div>

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/evelo0702/DevDiary-Server#readme",
   "dependencies": {
+    "@octokit/core": "^5.0.2",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",

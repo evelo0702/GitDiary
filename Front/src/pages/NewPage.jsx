@@ -24,7 +24,7 @@ const NewPage = () => {
   };
   return (
     <div className="text-3xl">
-      <div className="flex justify-center border-b-2 p-2">새 일기 작성</div>
+      <div className="flex justify-center border-b-2 p-2">새 노트 작성</div>
       <Editor gitData={gitData} />
     </div>
   );

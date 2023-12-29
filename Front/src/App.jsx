@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useReducer, useRef, useState } from "react";
+import React, {  useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NewPage from "./pages/NewPage";
@@ -7,35 +7,11 @@ import DetailPage from "./pages/DetailPage";
 import EditPage from "./pages/EditPage";
 import SideBar from "./components/SideBar";
 import ListPage from "./pages/ListPage";
-import LoginPage from "./pages/LoginPage";
 
-const reducer = (state, action) => {
-  let newState = [];
-  switch (action.type) {
-    case "INIT": {
-      return action.data;
-    }
-    case "CREATE": {
-      newState = [action.data, ...state];
-      break;
-    }
-    case "REMOVE": {
-      newState = state.filter((it) => it.id !== action.targetId);
-      break;
-    }
-    case "EDIT": {
-      newState = state.map((it) =>
-        it.id === action.data.id ? { ...action.data } : it
-      );
-      break;
-    }
-    default:
-      return state;
-  }
-  return newState;
-};
+
 export const StateContext = React.createContext();
 export const DispatchContext = React.createContext();
+console.log(new Date(2023, 10, 30, 3, 24, 0).getTime());
 const dummyData = [
   {
     id: 1,
@@ -44,6 +20,9 @@ const dummyData = [
     content: "안녕하세요1",
     title: "1번째입니다",
     link: "http://www.naver.com",
+    repo: "",
+    code: "",
+    commit: "",
   },
   {
     id: 2,
@@ -52,6 +31,9 @@ const dummyData = [
     content: "안녕하세요2",
     title: "2번째입니다",
     link: "http://www.naver.com",
+    repo: "",
+    code: "",
+    commit: "",
   },
   {
     id: 3,
@@ -60,6 +42,9 @@ const dummyData = [
     content: "안녕하세요3",
     title: "3번째입니다",
     link: "http://www.naver.com",
+    repo: "",
+    code: "",
+    commit: "",
   },
   {
     id: 4,
@@ -68,6 +53,9 @@ const dummyData = [
     content: "안녕하세요4",
     title: "4번째입니다",
     link: "",
+    repo: "",
+    code: "",
+    commit: "",
   },
   {
     id: 5,
@@ -76,6 +64,9 @@ const dummyData = [
     content: "안녕하세요5",
     title: "555555555555555555555555번째입니다",
     link: "http://www.naver.com",
+    repo: "",
+    code: "",
+    commit: "",
   },
   {
     id: 6,
@@ -84,6 +75,9 @@ const dummyData = [
     content: "안녕하세요6",
     title: "6번째입니다",
     link: "",
+    repo: "",
+    code: "",
+    commit: "",
   },
   {
     id: 7,
@@ -92,6 +86,9 @@ const dummyData = [
     content: "안녕하세요7",
     title: "7번째입니다",
     link: "",
+    repo: "",
+    code: "",
+    commit: "",
   },
   {
     id: 8,
@@ -100,51 +97,21 @@ const dummyData = [
     content: "안녕하세요8",
     title: "8번째입니다",
     link: "",
+    repo: "",
+    code: "",
+    commit: "",
   },
 ];
 
 function App() {
-  const [diaryData, dispatch] = useReducer(reducer, dummyData);
-  const dataId = useRef(0);
-
-  const [gitData, setGitData] = useState([{}]);
-  // CREATE
-  const onCreate = (date, content, title, link, lang) => {
-    dispatch({
-      type: "CREATE",
-      data: {
-        id: dataId.current,
-        date: new Date(date).getTime(),
-        content,
-        title,
-        link,
-        lang,
-      },
-    });
-    dataId.current += 1;
-  };
-  // EDIT
-  const onEdit = (targetId, date, content, title, link, lang) => {
-    dispatch({
-      type: "EDIT",
-      data: {
-        id: targetId,
-        date: new Date(date).getTime(),
-        content,
-        title,
-        link,
-        lang,
-      },
-    });
-  };
-  // REMOVE
-  const onRemove = (targetId) => {
-    dispatch({ type: "REMOVE", targetId });
-  };
+  const [diaryData, setDiaryData] = useState(dummyData);
+  const [gitData, setGitData] = useState();
 
   return (
-    <StateContext.Provider value={{ diaryData, gitData, setGitData }}>
-      <DispatchContext.Provider value={{ onCreate, onEdit, onRemove }}>
+    <StateContext.Provider
+      value={{ diaryData, setDiaryData, gitData, setGitData }}
+    >
+      <DispatchContext.Provider value={{}}>
         <BrowserRouter>
           <div className=" bg-black">
             <div
@@ -159,7 +126,6 @@ function App() {
                   <Route path="/List" element={<ListPage />} />
                   <Route path="/Edit/:id" element={<EditPage />} />
                   <Route path="/Detail/:id" element={<DetailPage />} />
-                  <Route path="/Login" element={<LoginPage />} />
                 </Routes>
               </div>
             </div>

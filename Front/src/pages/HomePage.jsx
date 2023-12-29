@@ -21,7 +21,6 @@ const HomePage = () => {
   return (
     <div>
       HomePage
-      {gitData[0].id}
       <div className="w-[200px] h-[200px] "></div>
     </div>
   );
