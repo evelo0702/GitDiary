@@ -1,25 +1,31 @@
-const { default: mongoose } = require("mongoose");
-const DiarySchema = mongoose.Schema({
-  id: {
-    type: Number,
-    unique: true,
-  },
+const mongoose = require("mongoose");
+const noteSchema = new mongoose.Schema({
+  author: { type: String },
   lang: {
     type: String,
   },
   date: {
     type: Number,
   },
-  content: {
-    type: String,
-  },
   title: {
     type: String,
   },
+  content: {
+    type: String,
+  },
+
   link: {
     type: String,
-    default: "",
     trim: true,
   },
+  repo: {
+    type: String,
+  },
+  code: {
+    type: String,
+  },
+  commit: {
+    type: Object,
+  },
 });
-module.exports = mongoose.model("Diary", DiarySchema);
+module.exports = mongoose.model("devNote", noteSchema);
