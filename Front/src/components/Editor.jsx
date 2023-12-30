@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import BaseBtn from "./BaseBtn";
-import MarkdownRender from "./MarkdownRender";
 import axios from "axios";
 
 const getStringDate = (date) => {
   return date.toISOString().slice(0, 10);
 };
-const code = `
-public class BootSpringBootApplication { 
-  public????? 
-  console.log("BYE!!!!")
-}`;
+
 
 const Editor = ({ gitData }) => {
+  const navigate = useNavigate();
   let location = useLocation().pathname;
 
   const [haveGit, setHaveGit] = useState(false);
@@ -134,11 +130,11 @@ const Editor = ({ gitData }) => {
     if (newData.content.length < 10) {
       return alert("본문은 10글자 이상을 입력해주세요");
     }
-    console.log(newData);
-    const result = await axios.post("http://localhost:8000/diary", {
-      newData,
-    });
-    console.log(result);
+    const result = await axios
+      .post("http://localhost:8000/diary", {
+        newData,
+      })
+      .then(() => navigate("/list"));
   };
 
   useEffect(() => {
@@ -148,13 +144,12 @@ const Editor = ({ gitData }) => {
       handleData("commit", "");
     }
   }, [haveGit]);
-  const [markdownOn, setMarkdown] = useState(false);
   return (
     <div>
       <div className="px-4">
         <div className="">
           <div className="my-2">
-            {location === "/New" ? (
+            {location == "/New" ? (
               <input
                 type="date"
                 value={getStringDate(new Date(newData.date))}
@@ -163,7 +158,7 @@ const Editor = ({ gitData }) => {
                 }
               />
             ) : (
-              <div>{newData.date}</div>
+              <div>{getStringDate(new Date(newData.date))}</div>
             )}
           </div>
           <div className="flex">
@@ -274,13 +269,7 @@ const Editor = ({ gitData }) => {
           className="w-full p-4 border-2 border-gray-400 rounded-md"
           onChange={(e) => handleData("content", e.target.value)}
         ></textarea>
-        <button
-          className="border-2 border-gray-200 rounded-lg p-0.5"
-          onClick={() => setMarkdown(!markdownOn)}
-        >
-          미리보기
-        </button>
-        {markdownOn && <MarkdownRender newData={newData} />}
+        
         <div className="flex justify-end">
           <BaseBtn text="노트 저장" size={"normal"} onClick={handleSubmit} />
           <BaseBtn text="취소" size={"normal"} type={"del"} />

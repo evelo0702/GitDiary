@@ -5,8 +5,8 @@ const ListCard = ({ item }) => {
     new Date(item.date).getMonth() + 1
   }월 ${new Date(item.date).getDate()}일`;
   return (
-    <Link to={`/detail/${item.id}`} className="p-4 max-h-[30vh]">
-      <div className="flex-col h-4/5 flex-wrap border border-black rounded-md">
+    <Link to={`/detail/${item._id}`} className="p-4 max-h-[30vh]">
+      <div className="flex border border-black rounded-md">
         <div className="h-1/4 p-1 my-4">
           {item.lang !== "none" && (
             <img

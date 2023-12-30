@@ -8,7 +8,6 @@ router.get("/", async (req, res) => {
 });
 router.post("/", async (req, res) => {
   const newNote = req.body.newData;
-  console.log(newNote);
   try {
     await Diary.create({
       date: newNote.date,

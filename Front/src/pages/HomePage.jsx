@@ -12,6 +12,7 @@ const HomePage = () => {
     setGitData(result.data);
   };
 
+
   useEffect(() => {
     if (code) {
       getGitData();

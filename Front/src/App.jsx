@@ -11,7 +11,6 @@ import ListPage from "./pages/ListPage";
 
 export const StateContext = React.createContext();
 export const DispatchContext = React.createContext();
-console.log(new Date(2023, 10, 30, 3, 24, 0).getTime());
 const dummyData = [
   {
     id: 1,
