@@ -4,7 +4,6 @@ const axios = require("axios");
 
 router.post("/", async (req, res) => {
   const { code } = req.body;
-
   const data = {
     client_id: process.env.VITE_GITHUB_CLIENT_ID,
     client_secret: process.env.VITE_GITHUB_CLIENT_PW,

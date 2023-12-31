@@ -10,6 +10,11 @@ const MarkdownRender = ({ newData }) => {
     console.log(copyData);
     if (newData.commit == "") {
       copyData.commit = { author: "", msg: "" };
+    } else {
+      copyData.commit = {
+        author: `/ 작성자: ${copyData.commit.author}`,
+        msg: `커밋메시지: ${copyData.commit.msg} `,
+      };
     }
   };
   getData();
@@ -26,7 +31,7 @@ const MarkdownRender = ({ newData }) => {
   
   ${newData.link}
   
-  ${newData.commit.msg} **${newData.commit.author}**
+  ${newData.commit.msg} ${newData.commit.author}
   
   
 

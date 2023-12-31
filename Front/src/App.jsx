@@ -1,5 +1,5 @@
 import "./App.css";
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NewPage from "./pages/NewPage";
@@ -7,7 +7,6 @@ import DetailPage from "./pages/DetailPage";
 import EditPage from "./pages/EditPage";
 import SideBar from "./components/SideBar";
 import ListPage from "./pages/ListPage";
-
 
 export const StateContext = React.createContext();
 export const DispatchContext = React.createContext();
@@ -105,7 +104,9 @@ const dummyData = [
 function App() {
   const [diaryData, setDiaryData] = useState(dummyData);
   const [gitData, setGitData] = useState();
-
+  useEffect(() => {
+    setGitData(JSON.parse(localStorage.getItem("userData")));
+  }, []);
   return (
     <StateContext.Provider
       value={{ diaryData, setDiaryData, gitData, setGitData }}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {  useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BaseBtn from "./BaseBtn";
 import axios from "axios";
 
@@ -7,12 +7,12 @@ const getStringDate = (date) => {
   return date.toISOString().slice(0, 10);
 };
 
-
 const Editor = ({ gitData }) => {
   const navigate = useNavigate();
   let location = useLocation().pathname;
 
   const [haveGit, setHaveGit] = useState(false);
+
   const [newData, setNewData] = useState({
     date: new Date().getTime(),
     lang: "",
@@ -22,8 +22,8 @@ const Editor = ({ gitData }) => {
     repo: "",
     code: "",
     commit: "",
-    author: gitData[0].id,
   });
+
   const [commitList, setCommitList] = useState([]);
   const handleData = (type, value) => {
     const copyDate = { ...newData, [type]: value };
@@ -129,6 +129,11 @@ const Editor = ({ gitData }) => {
     }
     if (newData.content.length < 10) {
       return alert("본문은 10글자 이상을 입력해주세요");
+    }
+    if (gitData) {
+      const author = { author: gitData[0].id };
+      const copyData = { ...newData, ...author };
+      console.log(copyData);
     }
     const result = await axios
       .post("http://localhost:8000/diary", {
@@ -269,7 +274,7 @@ const Editor = ({ gitData }) => {
           className="w-full p-4 border-2 border-gray-400 rounded-md"
           onChange={(e) => handleData("content", e.target.value)}
         ></textarea>
-        
+
         <div className="flex justify-end">
           <BaseBtn text="노트 저장" size={"normal"} onClick={handleSubmit} />
           <BaseBtn text="취소" size={"normal"} type={"del"} />
