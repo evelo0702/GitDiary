@@ -82,7 +82,11 @@ const SideBar = () => {
       )}
       {!gitData ? (
         <div className="flex items-center">
-          <img src="src/assets/github.png" alt="" className="w-5 h-5 me-2" />
+          <img
+            src="http://localhost:5173/src/assets/github.png"
+            alt=""
+            className="w-5 h-5 me-2"
+          />
           <Link className="mt-1" to={URL}>
             Login
           </Link>
