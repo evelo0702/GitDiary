@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { StateContext } from "../App";
-import MarkdownRender from "../components/MarkdownRender";
+import MarkdownRender from "../components/RenderCard";
 const DetailPage = () => {
   const { diaryData } = useContext(StateContext);
   const { id } = useParams();

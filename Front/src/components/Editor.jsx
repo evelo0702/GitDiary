@@ -7,7 +7,7 @@ const getStringDate = (date) => {
   return date.toISOString().slice(0, 10);
 };
 
-const Editor = ({ gitData }) => {
+const Editor = ({ gitData, mode, originalData }) => {
   const navigate = useNavigate();
   let location = useLocation().pathname;
 
@@ -141,6 +141,9 @@ const Editor = ({ gitData }) => {
       })
       .then(() => navigate("/list"));
   };
+  const handleEdit = async ()=>{
+    
+  }
 
   useEffect(() => {
     if (haveGit == false) {
