@@ -14,7 +14,6 @@ const EditPage = () => {
     if (result) {
       setData(result.data[0]);
     }
-    console.log(originalData);
   };
   useEffect(() => {
     getData();
@@ -22,7 +21,6 @@ const EditPage = () => {
 
   return (
     <div>
-      EditPage{id}
       <Editor gitData={gitData} originalData={originalData} mode={"edit"} />
     </div>
   );

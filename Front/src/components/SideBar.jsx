@@ -16,7 +16,6 @@ const SideBar = () => {
 
   let result2;
   const getGitData = async () => {
-    console.log("getGitData");
     let result = await axios.post("http://localhost:8000/login", {
       code: access_token,
     });

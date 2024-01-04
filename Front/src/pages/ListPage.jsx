@@ -169,7 +169,7 @@ const ListPage = () => {
         <button
           className="bg-indigo-300 hover:bg-indigo-950 whitespace-nowrap border w-1/4
         rounded-lg text-white p-1"
-          onClick={() => navigate("/new")}
+          onClick={() => navigate("/New")}
         >
           <p className="text-center">새 글 작성</p>
         </button>

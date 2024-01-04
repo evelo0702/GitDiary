@@ -12,7 +12,7 @@ router.get("/detail", async (req, res) => {
   return res.status(200).json(diary);
 });
 router.post("/", async (req, res) => {
-  const newNote = req.body.newData;
+  const newNote = req.body.copyData;
   try {
     await Diary.create({
       date: newNote.date,
@@ -38,9 +38,24 @@ router.delete("/delete", async (req, res) => {
     console.log(e);
   }
 });
-router.post("/update", async (req, res) => {
+router.post("/edit", async (req, res) => {
+  const newData = req.body.newData;
   try {
-    await Diary.updateOne({ _id: new ObjectId(req.query.id) }, { $set: {} });
+    await Diary.updateOne(
+      { _id: new ObjectId(req.query.id) },
+      {
+        $set: {
+          lang: newData.lang,
+          title: newData.title,
+          content: newData.content,
+          link: newData.link,
+          repo: newData.repo,
+          code: newData.code,
+          commit: newData.commit,
+        },
+      }
+    );
+    res.status(200).send("수정완료");
   } catch (e) {
     console.log(e);
   }

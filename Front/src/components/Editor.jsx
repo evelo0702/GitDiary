@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BaseBtn from "./BaseBtn";
 import axios from "axios";
 
@@ -8,6 +8,8 @@ const getStringDate = (date) => {
 };
 
 const Editor = ({ gitData, mode, originalData }) => {
+  const { id } = useParams();
+
   const navigate = useNavigate();
   let location = useLocation().pathname;
 
@@ -24,6 +26,9 @@ const Editor = ({ gitData, mode, originalData }) => {
     commit: "",
   });
 
+  useEffect(() => {
+    setNewData(originalData);
+  }, [originalData]);
   const [commitList, setCommitList] = useState([]);
   const handleData = (type, value) => {
     const copyDate = { ...newData, [type]: value };
@@ -37,7 +42,7 @@ const Editor = ({ gitData, mode, originalData }) => {
         ...newData,
         repo: "",
         link: "",
-        commit: "",
+        commit: "No-Data",
       };
       return setNewData(copyData2);
     }
@@ -130,20 +135,36 @@ const Editor = ({ gitData, mode, originalData }) => {
     if (newData.content.length < 10) {
       return alert("본문은 10글자 이상을 입력해주세요");
     }
+    let copyData;
     if (gitData) {
       const author = { author: gitData[0].id };
-      const copyData = { ...newData, ...author };
-      console.log(copyData);
+      copyData = { ...newData, ...author };
     }
     const result = await axios
       .post("http://localhost:8000/diary", {
+        copyData,
+      })
+      .then(() => navigate("/list"));
+  };
+  const handleEdit = async () => {
+    if (!newData.title) {
+      return alert("제목을 입력해주세요");
+    }
+    if (!newData.content) {
+      return alert("본문을 입력해주세요");
+    }
+    if (!newData.lang) {
+      return alert("언어를 선택해주세요");
+    }
+    if (newData.content.length < 10) {
+      return alert("본문은 10글자 이상을 입력해주세요");
+    }
+    const result = await axios
+      .post(`http://localhost:8000/diary/edit?id=${id}`, {
         newData,
       })
       .then(() => navigate("/list"));
   };
-  const handleEdit = async ()=>{
-    
-  }
 
   useEffect(() => {
     if (haveGit == false) {
@@ -170,34 +191,47 @@ const Editor = ({ gitData, mode, originalData }) => {
             )}
           </div>
           <div className="flex">
-            <p className=" font-bold me-4">have git?</p>
+            {location == "/New" ? (
+              <div>
+                <p className=" font-bold me-4">have git?</p>
+                <label className="mx-2">
+                  <input
+                    type="radio"
+                    name="git"
+                    id="O"
+                    value={true}
+                    className="mx-2"
+                    onChange={() => setHaveGit(true)}
+                  />
+                  O
+                </label>
 
-            <label className="mx-2">
-              <input
-                type="radio"
-                name="git"
-                id="O"
-                value={true}
-                className="mx-2"
-                onChange={() => setHaveGit(true)}
-              />
-              O
-            </label>
-
-            <label className="mx-2">
-              <input
-                type="radio"
-                name="git"
-                id="X"
-                value={false}
-                className="mx-2"
-                onChange={() => setHaveGit(false)}
-              />
-              X
-            </label>
-            <p className="text-xl text-gray-500 mx-4">
-              public 저장소만 선택 가능합니다
-            </p>
+                <label className="mx-2">
+                  <input
+                    type="radio"
+                    name="git"
+                    id="X"
+                    value={false}
+                    className="mx-2"
+                    onChange={() => setHaveGit(false)}
+                  />
+                  X
+                </label>
+                <p className="text-xl text-gray-500 mx-4">
+                  public 저장소만 선택 가능합니다
+                </p>
+              </div>
+            ) : (
+              <div>
+                <div>
+                  {originalData && originalData.commit == "No-Data" ? (
+                    <div>커밋없어!!!</div>
+                  ) : (
+                    <div>{originalData && originalData.commit.msg}</div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {haveGit == true ? (
@@ -242,46 +276,106 @@ const Editor = ({ gitData, mode, originalData }) => {
         </div>
 
         <div>
-          <input
-            className="p-1  mb-2 me-2 w-3/4"
-            type="text"
-            placeholder="제목"
-            onChange={(e) => handleData("title", e.target.value)}
-          />
-          <select
-            className="p-2 text-2xl"
-            onChange={(e) => handleData("lang", e.target.value)}
-          >
-            <option value={""}>언어선택</option>
-            {langSortOption.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          {originalData ? (
+            <input
+              className="p-1  mb-2 me-2 w-3/4"
+              type="text"
+              placeholder="제목"
+              defaultValue={originalData.title}
+              onChange={(e) => handleData("title", e.target.value)}
+            />
+          ) : (
+            <input
+              className="p-1  mb-2 me-2 w-3/4"
+              type="text"
+              placeholder="제목"
+              onChange={(e) => handleData("title", e.target.value)}
+            />
+          )}
 
-        <textarea
-          name=""
-          id=""
-          rows="3"
-          className="w-full p-4 text-xl border-2 border-gray-400 rounded-md"
-          placeholder="코드 입력"
-          onChange={(e) => handleData("code", e.target.value)}
-        ></textarea>
-        <textarea
-          name=""
-          id=""
-          rows="10"
-          placeholder="노트 본문 입력"
-          className="w-full p-4 border-2 border-gray-400 rounded-md"
-          onChange={(e) => handleData("content", e.target.value)}
-        ></textarea>
-
-        <div className="flex justify-end">
-          <BaseBtn text="노트 저장" size={"normal"} onClick={handleSubmit} />
-          <BaseBtn text="취소" size={"normal"} type={"del"} />
+          {originalData ? (
+            <>
+              <select
+                className="p-2 text-2xl"
+                onChange={(e) => handleData("lang", e.target.value)}
+                defaultValue={originalData.lang}
+              >
+                <option value={""}>언어선택</option>
+                {langSortOption.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </>
+          ) : (
+            <select
+              className="p-2 text-2xl"
+              onChange={(e) => handleData("lang", e.target.value)}
+            >
+              <option value={""}>언어선택</option>
+              {langSortOption.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
+        {originalData ? (
+          <>
+            <textarea
+              name=""
+              id=""
+              rows="3"
+              className="w-full p-4 text-xl border-2 border-gray-400 rounded-md"
+              placeholder="코드 입력"
+              defaultValue={originalData.code}
+              onChange={(e) => handleData("code", e.target.value)}
+            ></textarea>
+            <textarea
+              name=""
+              id=""
+              rows="10"
+              placeholder="노트 본문 입력"
+              defaultValue={originalData.content}
+              className="w-full p-4 border-2 border-gray-400 rounded-md"
+              onChange={(e) => handleData("content", e.target.value)}
+            ></textarea>
+          </>
+        ) : (
+          <>
+            <textarea
+              name=""
+              id=""
+              rows="3"
+              className="w-full p-4 text-xl border-2 border-gray-400 rounded-md"
+              placeholder="코드 입력"
+              onChange={(e) => handleData("code", e.target.value)}
+            ></textarea>
+            <textarea
+              name=""
+              id=""
+              rows="10"
+              placeholder="노트 본문 입력"
+              className="w-full p-4 border-2 border-gray-400 rounded-md"
+              onChange={(e) => handleData("content", e.target.value)}
+            ></textarea>
+          </>
+        )}
+        {originalData ? (
+          <div className="flex justify-end">
+            <span className="me-4">
+              <BaseBtn text="노트 수정" size={"normal"} onClick={handleEdit} />
+            </span>
+            <BaseBtn text="취소" size={"normal"} type={"del"} />
+          </div>
+        ) : (
+          <div className="flex justify-end">
+            <BaseBtn text="노트 저장" size={"normal"} onClick={handleSubmit} />
+            <BaseBtn text="취소" size={"normal"} type={"del"} />
+          </div>
+        )}
       </div>
     </div>
   );
