@@ -9,12 +9,21 @@ const getStringDate = (date) => {
 
 const Editor = ({ gitData, mode, originalData }) => {
   const { id } = useParams();
-
   const navigate = useNavigate();
   let location = useLocation().pathname;
 
   const [haveGit, setHaveGit] = useState(false);
-
+  const [addCommit, setCommit] = useState(false);
+  const resetCommit = () => {
+    setCommit(false);
+    const copyData2 = {
+      ...newData,
+      repo: "",
+      link: "",
+      commit: "No-Data",
+    };
+    setNewData(copyData2);
+  };
   const [newData, setNewData] = useState({
     date: new Date().getTime(),
     lang: "",
@@ -30,13 +39,27 @@ const Editor = ({ gitData, mode, originalData }) => {
     setNewData(originalData);
   }, [originalData]);
   const [commitList, setCommitList] = useState([]);
+  useEffect(() => {
+    if (addCommit == false) {
+      const copyData2 = {
+        ...newData,
+        repo: "",
+        link: "",
+        commit: "No-Data",
+      };
+      setNewData(copyData2);
+    }
+  }, [addCommit]);
   const handleData = (type, value) => {
-    const copyDate = { ...newData, [type]: value };
-    setNewData(copyDate);
+    if (value != null) {
+      const copyData = { ...newData, [type]: value };
+      setNewData(copyData);
+    }
 
     if (
       (type == "repo" || type == "link" || type == "commit") &&
-      haveGit == false
+      haveGit == false &&
+      addCommit == false
     ) {
       const copyData2 = {
         ...newData,
@@ -140,7 +163,7 @@ const Editor = ({ gitData, mode, originalData }) => {
       const author = { author: gitData[0].id };
       copyData = { ...newData, ...author };
     }
-    const result = await axios
+    await axios
       .post("http://localhost:8000/diary", {
         copyData,
       })
@@ -159,11 +182,15 @@ const Editor = ({ gitData, mode, originalData }) => {
     if (newData.content.length < 10) {
       return alert("본문은 10글자 이상을 입력해주세요");
     }
-    const result = await axios
-      .post(`http://localhost:8000/diary/edit?id=${id}`, {
-        newData,
-      })
-      .then(() => navigate("/list"));
+    console.log(addCommit);
+
+    console.log(newData);
+
+    // await axios
+    //   .post(`http://localhost:8000/diary/edit?id=${id}`, {
+    //     newData,
+    //   })
+    //   .then(() => navigate("/list"));
   };
 
   useEffect(() => {
@@ -174,6 +201,7 @@ const Editor = ({ gitData, mode, originalData }) => {
     }
   }, [haveGit]);
   return (
+    // 추후 보강사항 - 글작성과 수정 페이지의 다른 코드 구조를 명확하게 구분할수있게 만들것
     <div>
       <div className="px-4">
         <div className="">
@@ -223,13 +251,62 @@ const Editor = ({ gitData, mode, originalData }) => {
               </div>
             ) : (
               <div>
-                <div>
-                  {originalData && originalData.commit == "No-Data" ? (
-                    <div>커밋없어!!!</div>
-                  ) : (
-                    <div>{originalData && originalData.commit.msg}</div>
-                  )}
-                </div>
+                {addCommit || (originalData && newData.commit != "No-Data") ? (
+                  <button
+                    onClick={() => {
+                      resetCommit();
+                    }}
+                  >
+                    커밋삭제
+                  </button>
+                ) : (
+                  <button onClick={() => setCommit(true)}>커밋추가</button>
+                )}
+
+                {addCommit ? (
+                  <div>
+                    <select
+                      className="text-2xl my-2"
+                      onChange={(e) => handleData("repo", e.target.value)}
+                    >
+                      <option value="none">레포지토리 선택</option>
+                      {gitData[0].repo.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                    {newData.repo !== "" && newData.repo !== "none" && (
+                      <select
+                        className="text-xl flex my-2"
+                        onChange={(e) =>
+                          handleData("commit", JSON.parse(e.target.value))
+                        }
+                      >
+                        <option value="none">커밋 선택</option>
+                        {commitList &&
+                          commitList.map((item) => (
+                            <option
+                              key={item[0].id}
+                              value={JSON.stringify(item[0])}
+                              className=" overflow-auto"
+                            >
+                              {item[0].author} -{" "}
+                              {item[0].msg.length > 60
+                                ? item[0].msg.slice(0, 60) + "....."
+                                : item[0].msg}
+                            </option>
+                          ))}
+                      </select>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    {originalData && newData.commit == "No-Data" ? null : (
+                      <div>{newData.commit.msg}</div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
