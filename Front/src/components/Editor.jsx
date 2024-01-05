@@ -96,7 +96,6 @@ const Editor = ({ gitData, mode, originalData }) => {
         },
       ]);
       setCommitList(commit);
-      console.log(commit);
     }
   };
 
@@ -182,15 +181,13 @@ const Editor = ({ gitData, mode, originalData }) => {
     if (newData.content.length < 10) {
       return alert("본문은 10글자 이상을 입력해주세요");
     }
-    console.log(addCommit);
 
-    console.log(newData);
 
-    // await axios
-    //   .post(`http://localhost:8000/diary/edit?id=${id}`, {
-    //     newData,
-    //   })
-    //   .then(() => navigate("/list"));
+    await axios
+      .post(`http://localhost:8000/diary/edit?id=${id}`, {
+        newData,
+      })
+      .then(() => navigate("/list"));
   };
 
   useEffect(() => {
