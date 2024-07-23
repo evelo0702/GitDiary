@@ -6,14 +6,13 @@ import NewPage from "./pages/NewPage";
 import DetailPage from "./pages/DetailPage";
 import EditPage from "./pages/EditPage";
 import SideBar from "./components/SideBar";
-import ListPage from "./pages/ListPage";
 
 export const StateContext = React.createContext();
 export const DispatchContext = React.createContext();
 
 function App() {
   const [diaryData, setDiaryData] = useState([]);
-  const [gitData, setGitData] = useState();
+  const [gitData, setGitData] = useState([{}]);
   useEffect(() => {
     setGitData(JSON.parse(localStorage.getItem("userData")));
   }, []);
@@ -25,15 +24,14 @@ function App() {
         <BrowserRouter>
           <div className=" bg-black">
             <div
-              className="bg-[#f6f6f6] max-w-[70vw] mx-auto flex justify-end min-h-[100vh] font-Dongle
+              className="bg-[#f6f6f6]  mx-auto flex justify-center min-h-[100vh] font-Dongle
        m-0"
             >
-              <SideBar />
               <div className="text-4xl sm:w-5/6 bg-white shadow-cus min-h-[100vh] min-w-[180px] px-10 py-10">
+                <SideBar />
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/New" element={<NewPage />} />
-                  <Route path="/List" element={<ListPage />} />
                   <Route path="/Edit/:id" element={<EditPage />} />
                   <Route path="/Detail/:id" element={<DetailPage />} />
                 </Routes>

@@ -4,10 +4,11 @@ const axios = require("axios");
 
 router.post("/", async (req, res) => {
   const { code } = req.body;
+
   const data = {
     client_id: process.env.VITE_GITHUB_CLIENT_ID,
     client_secret: process.env.VITE_GITHUB_CLIENT_PW,
-    code: req.body.code,
+    code: code,
   };
   const result = await axios.post(
     "https://github.com/login/oauth/access_token",

@@ -112,6 +112,7 @@ const Editor = ({ gitData, mode, originalData }) => {
       value: "java",
       name: "JAVA",
     },
+    { value: "react", name: "REACT" },
     {
       value: "next",
       name: "NEXT",
@@ -166,7 +167,7 @@ const Editor = ({ gitData, mode, originalData }) => {
       .post("http://localhost:8000/diary", {
         copyData,
       })
-      .then(() => navigate("/list"));
+      .then(() => navigate("/"));
   };
   const handleEdit = async () => {
     if (!newData.title) {
@@ -182,12 +183,11 @@ const Editor = ({ gitData, mode, originalData }) => {
       return alert("본문은 10글자 이상을 입력해주세요");
     }
 
-
     await axios
       .post(`http://localhost:8000/diary/edit?id=${id}`, {
         newData,
       })
-      .then(() => navigate("/list"));
+      .then(() => navigate("/"));
   };
 
   useEffect(() => {
@@ -218,7 +218,7 @@ const Editor = ({ gitData, mode, originalData }) => {
           <div className="flex">
             {location == "/New" ? (
               <div>
-                <p className=" font-bold me-4">have git?</p>
+                <span className="font-bold me-4">have git?</span>
                 <label className="mx-2">
                   <input
                     type="radio"
@@ -267,30 +267,30 @@ const Editor = ({ gitData, mode, originalData }) => {
                       onChange={(e) => handleData("repo", e.target.value)}
                     >
                       <option value="none">레포지토리 선택</option>
-                      {gitData[0].repo.map((item) => (
-                        <option key={item} value={item}>
+                      {gitData[0].repo.map((item, index) => (
+                        <option key={index} value={item}>
                           {item}
                         </option>
                       ))}
                     </select>
                     {newData.repo !== "" && newData.repo !== "none" && (
                       <select
-                        className="text-xl flex my-2"
+                        className="text-2xl flex my-2"
                         onChange={(e) =>
                           handleData("commit", JSON.parse(e.target.value))
                         }
                       >
                         <option value="none">커밋 선택</option>
                         {commitList &&
-                          commitList.map((item) => (
+                          commitList.map((item, index) => (
                             <option
-                              key={item[0].id}
+                              key={index}
                               value={JSON.stringify(item[0])}
-                              className=" overflow-auto"
+                              className="overflow-auto"
                             >
                               {item[0].author} -{" "}
-                              {item[0].msg.length > 60
-                                ? item[0].msg.slice(0, 60) + "....."
+                              {item[0].msg.length > 80
+                                ? item[0].msg.slice(0, 80) + "....."
                                 : item[0].msg}
                             </option>
                           ))}
@@ -329,17 +329,16 @@ const Editor = ({ gitData, mode, originalData }) => {
                     handleData("commit", JSON.parse(e.target.value))
                   }
                 >
-                  <option value="none">커밋 선택</option>
                   {commitList &&
-                    commitList.map((item) => (
+                    commitList.map((item, index) => (
                       <option
-                        key={item[0].id}
+                        key={index}
                         value={JSON.stringify(item[0])}
-                        className=" overflow-auto"
+                        className=" overflow-auto w-full"
                       >
                         {item[0].author} -{" "}
-                        {item[0].msg.length > 60
-                          ? item[0].msg.slice(0, 60) + "....."
+                        {item[0].msg.length > 80
+                          ? item[0].msg.slice(0, 80) + "....."
                           : item[0].msg}
                       </option>
                     ))}
@@ -447,7 +446,12 @@ const Editor = ({ gitData, mode, originalData }) => {
         ) : (
           <div className="flex justify-end">
             <BaseBtn text="노트 저장" size={"normal"} onClick={handleSubmit} />
-            <BaseBtn text="취소" size={"normal"} type={"del"} />
+            <BaseBtn
+              text="취소"
+              size={"normal"}
+              type={"del"}
+              onClick={() => navigate("/")}
+            />
           </div>
         )}
       </div>

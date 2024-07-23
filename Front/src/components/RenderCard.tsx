@@ -16,9 +16,9 @@ const MarkdownRender = ({ newData }) => {
 
     if (copyData && copyData.commit != "") {
       copyData.commit = {
-        author: `/ 커밋 작성자: ${copyData.commit.author}`,
-        msg: `커밋 메시지: ${copyData.commit.msg}`,
-        date: `${copyData.commit.date.slice(0, 10)} 작성`,
+        author: `${copyData.commit.author}`,
+        msg: `${copyData.commit.msg}`,
+        date: `${copyData.commit.date.slice(0, 10)}`,
       };
     }
     setDiaryData(copyData);
@@ -53,10 +53,13 @@ const MarkdownRender = ({ newData }) => {
 `;
   }
   const DeleteNote = async () => {
-    const result = await axios.delete(
-      `http://localhost:8000/diary/delete?id=${id}`
-    );
-    navigate("/list");
+    const confirmDelete = window.confirm("해당 글을 삭제하시겠습니까?");
+    if (confirmDelete) {
+      const result = await axios.delete(
+        `http://localhost:8000/diary/delete?id=${id}`
+      );
+      navigate("/");
+    }
   };
   const EditNote = () => {
     navigate(`/edit/${id}`);
@@ -88,10 +91,30 @@ const MarkdownRender = ({ newData }) => {
           <div>
             {diaryData.commit && (
               <div>
-                {diaryData.link}
-                {diaryData.commit.msg}
-                {diaryData.commit.author}
-                {diaryData.commit.date}
+                <div className="text-2xl">
+                  <span className="font-bold">Commit-Message :</span>
+                  <span className="ms-2 text-2xl">
+                    {diaryData.commit.msg} from
+                  </span>
+                  <span className="ms-2 text-3xl">
+                    {diaryData.commit.author}
+                  </span>
+                </div>
+                <div className="text-2xl">
+                  <span className="font-bold">Repo-Link:</span>
+                  <a className="ms-2" href={diaryData.link} target="_blank">
+                    {diaryData.link}
+                  </a>
+                </div>
+
+                <div></div>
+
+                <div className="text-2xl">
+                  <span className="font-bold">Commit-Date:</span>
+                  <a className="ms-2" href={diaryData.link} target="_blank">
+                    {diaryData.commit.date}
+                  </a>
+                </div>
               </div>
             )}
           </div>
