@@ -38,7 +38,7 @@ const SideBar = () => {
   return (
     <div className="flex font-bold text-5xl">
       <Link className="" to={"/"}>
-        DEVDIARY
+        GITDIARY
       </Link>
 
       <div className="w-full flex text-3xl font-bold items-center justify-end">
