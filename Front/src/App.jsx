@@ -22,20 +22,18 @@ function App() {
     >
       <DispatchContext.Provider value={{}}>
         <BrowserRouter>
-          <div className=" bg-black">
-            <div
-              className="bg-[#f6f6f6]  mx-auto flex justify-center min-h-[100vh] font-Dongle
-       m-0"
-            >
-              <div className="text-4xl sm:w-5/6 bg-white shadow-cus min-h-[100vh] min-w-[180px] px-10 py-10">
-                <SideBar />
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/New" element={<NewPage />} />
-                  <Route path="/Edit/:id" element={<EditPage />} />
-                  <Route path="/Detail/:id" element={<DetailPage />} />
-                </Routes>
-              </div>
+          <div
+            className="bg-[#f6f6f6]  mx-auto flex justify-center font-Dongle
+       m-0  h-[100vh]"
+          >
+            <div className="text-4xl sm:w-5/6 bg-white shadow-cus px-10 h-full max-w-[1000px] rounded-md">
+              <SideBar />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/New" element={<NewPage />} />
+                <Route path="/Edit/:id" element={<EditPage />} />
+                <Route path="/Detail/:id" element={<DetailPage />} />
+              </Routes>
             </div>
           </div>
         </BrowserRouter>

@@ -1,6 +1,6 @@
-import { Link, redirect, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { StateContext } from "../App";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
 const { VITE_GITHUB_CLIENT_ID } = import.meta.env;
 
@@ -36,9 +36,9 @@ const SideBar = () => {
   }, [access_token]);
 
   return (
-    <div className="flex font-bold text-5xl">
-      <Link className="" to={"/"}>
-        GITDIARY
+    <div className="flex text-5xl items-center h-[10vh]">
+      <Link className="flex w-full" to={"/"}>
+        Git-Diary
       </Link>
 
       <div className="w-full flex text-3xl font-bold items-center justify-end">

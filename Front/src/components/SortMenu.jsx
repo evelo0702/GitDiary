@@ -8,8 +8,12 @@ const SortMenu = ({
 }) => {
   // 최신순 오래된순 필터랑 언어필터 동시 적용 처리 필요 *****
   return (
-    <>
-      <select value={sort} onChange={(e) => sortChange(e.target.value)}>
+    <div className="flex flex-start ms-4 text-2xl">
+      <select
+        value={sort}
+        onChange={(e) => sortChange(e.target.value)}
+        className="me-5"
+      >
         {sortOption.map((it, index) => (
           <option value={it.value} key={index}>
             {it.name}
@@ -23,7 +27,7 @@ const SortMenu = ({
           </option>
         ))}
       </select>
-    </>
+    </div>
   );
 };
 

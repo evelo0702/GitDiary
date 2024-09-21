@@ -159,43 +159,49 @@ const HomePage = () => {
     }
   }, [originalData, langSort]);
   return (
-    <div className="h-[90vh] w-full">
-      <Header
-        centerText={dateKor}
-        leftBtn={<BaseBtn text={"<"} onClick={prevMonth} size={"small"} />}
-        rightBtn={<BaseBtn text={">"} onClick={nextMonth} size={"small"} />}
-      />
-      <div className="w-full mx-auto  flex justify-between text-xl">
-        <SortMenu
-          sort={sort}
-          sortChange={setSort}
-          sortOption={sortOption}
-          langSort={langSort}
-          langChange={setLangSort}
-          langSortOption={langSortOption}
+    <div>
+      <div className="flex">
+        <Header
+          centerText={dateKor}
+          leftBtn={<BaseBtn text={"<"} onClick={prevMonth} size={"small"} />}
+          rightBtn={<BaseBtn text={">"} onClick={nextMonth} size={"small"} />}
         />
-        {gitData && (
-          <button
-            className="bg-indigo-300 hover:bg-indigo-950 whitespace-nowrap border w-1/4
-        rounded-lg text-white p-1"
-            onClick={() => navigate("/New")}
-          >
-            <p className="text-center">새 글 작성</p>
-          </button>
-        )}
+        <div className="w-1/2 mx-auto flex justify-between text-xl p-2 items-center h-16 mb-4 bg-white shadow-lg rounded-lg border border-gray-300">
+          <SortMenu
+            sort={sort}
+            sortChange={setSort}
+            sortOption={sortOption}
+            langSort={langSort}
+            langChange={setLangSort}
+            langSortOption={langSortOption}
+          />
+          {gitData && (
+            <button
+              className="bg-indigo-300 hover:bg-indigo-950 whitespace-nowrap border w-1/4
+          rounded-lg text-white p-1"
+              onClick={() => navigate("/New")}
+            >
+              <p className="text-center">새 글 작성</p>
+            </button>
+          )}
+        </div>
       </div>
       <div
-        className="h-[82vh] flex flex-col 
-         overflow-y-auto mt-4 "
+        className="h-[80vh] grid grid-cols-2 grid-rows-3  mt-2"
+        style={{ maxWidth: "1000px" }}
       >
         {data !== null && data.length > 0 ? (
-          data.map((item, index) => <ListCard item={item} key={index} />)
+          data.map((item, index) => (
+            <div className="w-full h-[calc(82vh/3)]" key={index}>
+              <ListCard item={item} />
+            </div>
+          ))
         ) : gitData ? (
-          <div className="flex justify-center items-center">
+          <div className="col-span-2 flex justify-center items-center">
             {dateKor.slice(5)}에 작성한 노트가 없습니다
           </div>
         ) : (
-          <div className="flex justify-center items-center">
+          <div className="col-span-2 flex justify-center items-center">
             로그인을 해주세요
           </div>
         )}
