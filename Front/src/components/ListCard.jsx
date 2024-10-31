@@ -38,8 +38,12 @@ const ListCard = ({ item }) => {
           {item.commit !== "No-Data" && (
             <div className="text-xl text-gray-500 mt-1">
               {item.commit.msg}
-              <span className="font-bold text-gray-700 mx-2">from</span>
-              <span>{item.commit.author}</span>
+              {item.commit.msg && (
+                <>
+                  <span className="font-bold text-gray-700 mx-2">from</span>
+                  <span>{item.commit.author}</span>
+                </>
+              )}
             </div>
           )}
         </div>

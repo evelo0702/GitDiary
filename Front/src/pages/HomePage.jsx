@@ -17,12 +17,10 @@ const HomePage = () => {
   const [sort, setSort] = useState("latest");
   const [langSort, setLangSort] = useState("all");
   const getDiaryData = async () => {
-    if (gitData) {
-      const result = await axios.get(
-        `http://localhost:8000/diary?author=${gitData[0].id}`
-      );
-      setDiaryData(result.data);
-    }
+    const result = await axios.get(
+      `http://localhost:8000/diary?author=${gitData[0].id}`
+    );
+    setDiaryData(result.data);
   };
   useEffect(() => {
     if (gitData) {
