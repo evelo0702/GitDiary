@@ -1,49 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useNavigate, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import axios from "axios";
-const MarkdownRender = ({ newData }) => {
+const MarkdownRender = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [markdownData, setMarkdown] = useState();
-  const [diaryData, setDiaryData] = useState(newData);
-  const getData = (reloadData) => {
-    let copyData = newData;
-    if (diaryData == null && reloadData) {
-      copyData = reloadData;
-    }
-
-    if (copyData && copyData.commit != "") {
-      copyData.commit = {
-        author: `${copyData.commit.author}`,
-        msg: `${copyData.commit.msg}`,
-        date: `${copyData.commit.date.slice(0, 10)}`,
-      };
-    }
-    setDiaryData(copyData);
-  };
-  let date;
+  const [diaryData, setDiaryData] = useState();
   let markdown;
-  const getStringDate = (date) => {
-    return date.toISOString().slice(0, 10);
-  };
-  const reloadData = async () => {
+  const loadData = async () => {
     const result = await axios.get(
       `http://localhost:8000/diary/detail?id=${id}`
     );
-
-    getData(result.data[0]);
+    let tempData = result.data[0];
+    if (tempData) {
+      setDiaryData({
+        ...tempData,
+        date: new Date(tempData.date).toISOString().slice(0, 10),
+      });
+    }
   };
 
   useEffect(() => {
-    if (!newData) {
-      reloadData();
-    }
+    loadData();
   }, []);
-
   if (diaryData) {
-    date = getStringDate(new Date(diaryData.date));
     markdown = `
 
   \`\`\`
@@ -55,9 +36,7 @@ const MarkdownRender = ({ newData }) => {
   const DeleteNote = async () => {
     const confirmDelete = window.confirm("해당 글을 삭제하시겠습니까?");
     if (confirmDelete) {
-      const result = await axios.delete(
-        `http://localhost:8000/diary/delete?id=${id}`
-      );
+      await axios.delete(`http://localhost:8000/diary/delete?id=${id}`);
       navigate("/");
     }
   };
@@ -65,13 +44,13 @@ const MarkdownRender = ({ newData }) => {
     navigate(`/edit/${id}`);
   };
   return (
-    <div>
+    <div className="">
       {diaryData && (
         <div>
           <div>
             <div className=" text-5xl mt-6 mb-3">{diaryData.title}</div>
             <div className="flex text-2xl items-center mb-3">
-              <div>{date}</div>
+              <div>{diaryData.date}</div>
               <div className="ms-4">{diaryData.author}</div>
               <button
                 className="mx-2 border rounded-lg bg-red-400 p-0.5 text-xl"
@@ -93,16 +72,26 @@ const MarkdownRender = ({ newData }) => {
               <div>
                 <div className="text-2xl">
                   <span className="font-bold">Commit-Message :</span>
-                  <span className="ms-2 text-2xl">
-                    {diaryData.commit.msg} from
-                  </span>
-                  <span className="ms-2 text-3xl">
-                    {diaryData.commit.author}
-                  </span>
+                  {diaryData.commit.msg && (
+                    <>
+                      <span className="ms-2 text-2xl">
+                        {diaryData.commit.msg} from
+                      </span>
+
+                      <span className="ms-2 text-3xl">
+                        {diaryData.commit.author}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <div className="text-2xl">
                   <span className="font-bold">Repo-Link:</span>
-                  <a className="ms-2" href={diaryData.link} target="_blank">
+                  <a
+                    className="ms-2"
+                    rel="noreferrer"
+                    href={diaryData.link}
+                    target="_blank"
+                  >
                     {diaryData.link}
                   </a>
                 </div>
@@ -111,7 +100,12 @@ const MarkdownRender = ({ newData }) => {
 
                 <div className="text-2xl">
                   <span className="font-bold">Commit-Date:</span>
-                  <a className="ms-2" href={diaryData.link} target="_blank">
+                  <a
+                    className="ms-2"
+                    rel="noreferrer"
+                    href={diaryData.link}
+                    target="_blank"
+                  >
                     {diaryData.commit.date}
                   </a>
                 </div>
@@ -130,7 +124,7 @@ const MarkdownRender = ({ newData }) => {
                 />
               ),
               p: ({ node, ...props }) => (
-                <p {...props} className="no-underline text-2xl" />
+                <p {...props} className="no-underline text-2xl text-black" />
               ),
               code: ({ node, ...props }) => (
                 <code {...props} className="text-white " />
