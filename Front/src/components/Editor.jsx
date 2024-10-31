@@ -7,7 +7,7 @@ const getStringDate = (date) => {
   return date.toISOString().slice(0, 10);
 };
 
-const Editor = ({ gitData, mode, originalData }) => {
+const Editor = ({ gitData, originalData }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   let location = useLocation().pathname;
@@ -197,9 +197,10 @@ const Editor = ({ gitData, mode, originalData }) => {
       handleData("commit", "");
     }
   }, [haveGit]);
+
   return (
     // 추후 보강사항 - 글작성과 수정 페이지의 다른 코드 구조를 명확하게 구분할수있게 만들것
-    <div>
+    <div className=" h-[80vh]">
       <div className="px-4">
         <div className="">
           <div className="my-2">
@@ -247,19 +248,7 @@ const Editor = ({ gitData, mode, originalData }) => {
                 </p>
               </div>
             ) : (
-              <div>
-                {addCommit || (originalData && newData.commit != "No-Data") ? (
-                  <button
-                    onClick={() => {
-                      resetCommit();
-                    }}
-                  >
-                    커밋삭제
-                  </button>
-                ) : (
-                  <button onClick={() => setCommit(true)}>커밋추가</button>
-                )}
-
+              <div className="flex">
                 {addCommit ? (
                   <div>
                     <select
@@ -300,9 +289,30 @@ const Editor = ({ gitData, mode, originalData }) => {
                 ) : (
                   <div>
                     {originalData && newData.commit == "No-Data" ? null : (
-                      <div>{newData.commit.msg}</div>
+                      <div className="text-2xl">{newData.commit.msg}</div>
                     )}
                   </div>
+                )}
+
+                {addCommit ||
+                (originalData &&
+                  newData.commit != "No-Data" &&
+                  newData.commit != "") ? (
+                  <button
+                    onClick={() => {
+                      resetCommit();
+                    }}
+                    className="mx-2 border rounded-lg bg-red-400 p-0.5 text-xl"
+                  >
+                    커밋삭제
+                  </button>
+                ) : (
+                  <button
+                    className="mx-2 border rounded-lg bg-slate-400 p-0.5 text-xl"
+                    onClick={() => setCommit(true)}
+                  >
+                    커밋추가
+                  </button>
                 )}
               </div>
             )}
@@ -429,7 +439,7 @@ const Editor = ({ gitData, mode, originalData }) => {
             <textarea
               name=""
               id=""
-              rows="10"
+              rows="7"
               placeholder="노트 본문 입력"
               className="w-full p-4 border-2 border-gray-400 rounded-md"
               onChange={(e) => handleData("content", e.target.value)}
