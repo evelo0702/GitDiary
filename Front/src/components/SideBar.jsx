@@ -10,6 +10,7 @@ const SideBar = () => {
   const navigate = useNavigate();
   const URL = `https://github.com/login/oauth/authorize?client_id=${VITE_GITHUB_CLIENT_ID}`;
   const { gitData, setGitData } = useContext(StateContext);
+  const { setDiaryData } = useContext(StateContext);
   let access_token = searchParams.get("code");
   let result2;
   const getGitData = async () => {
@@ -25,7 +26,9 @@ const SideBar = () => {
 
   const logOut = () => {
     localStorage.removeItem("userData");
+    localStorage.removeItem("diaryData");
     setGitData(null);
+    setDiaryData(null);
     navigate("/");
   };
   useEffect(() => {
@@ -40,7 +43,6 @@ const SideBar = () => {
       <Link className="flex w-full" to={"/"}>
         Git-Diary
       </Link>
-
       <div className="w-full flex text-3xl font-bold items-center justify-end">
         {gitData && (
           <>
@@ -61,7 +63,7 @@ const SideBar = () => {
           </div>
         ) : (
           <>
-            <div onClick={() => logOut()}>Logout</div>
+            <button onClick={() => logOut()}>Logout</button>
           </>
         )}
       </div>
