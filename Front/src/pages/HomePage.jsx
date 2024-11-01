@@ -14,13 +14,18 @@ const HomePage = () => {
   const [date, setDate] = useState(new Date());
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-  const [sort, setSort] = useState("latest");
+  const [sort, setSort] = useState("oldest");
   const [langSort, setLangSort] = useState("all");
   const getDiaryData = async () => {
-    const result = await axios.get(
-      `http://localhost:8000/diary?author=${gitData[0].id}`
-    );
-    setDiaryData(result.data);
+    if (gitData[0].id) {
+      const result = await axios.get(
+        `http://localhost:8000/diary?author=${gitData[0].id}`
+      );
+      if (result) {
+        localStorage.setItem("diaryData", JSON.stringify(result.data));
+        setDiaryData(result.data);
+      }
+    }
   };
   useEffect(() => {
     if (gitData) {
@@ -31,6 +36,7 @@ const HomePage = () => {
       setData(null);
     }
   }, [gitData]);
+
   const sortOption = [
     {
       value: "latest",
@@ -107,55 +113,39 @@ const HomePage = () => {
       24
     ).getTime();
     if (diaryData && diaryData.length >= 1) {
-      setData(
-        diaryData
-          .filter((it) => firstDay <= it.date && it.date <= lastDay)
-          .sort((a, b) => {
-            if (a.date > b.date) return 1;
-            if (a.date < b.date) return -1;
-          })
-      );
-      setOriginalData(
-        diaryData
-          .filter((it) => firstDay <= it.date && it.date <= lastDay)
-          .sort((a, b) => {
-            if (a.date > b.date) return 1;
-            if (a.date < b.date) return -1;
-          })
-      );
+      let filterData = diaryData
+        .filter((it) => firstDay <= it.date && it.date <= lastDay)
+        .sort((a, b) => {
+          if (a.date > b.date) return 1;
+          if (a.date < b.date) return -1;
+        });
+      setData(filterData);
+      setOriginalData(filterData);
     }
   }, [diaryData, date]);
 
   // sort
   useEffect(() => {
-    const latest = [...originalData].sort((a, b) => {
-      if (a.date > b.date) return 1;
-      if (a.date < b.date) return -1;
-    });
-    const oldest = [...originalData].sort((a, b) => {
-      if (a.date < b.date) return 1;
-      if (a.date > b.date) return -1;
-    });
+    if (data.length > 0) {
+      let sortedData = [...data].sort((a, b) =>
+        sort === "latest" ? b.date - a.date : a.date - b.date
+      );
+      setData(sortedData);
+    }
+  }, [sort]);
 
-    if (originalData.length > 0) {
-      if (sort === "latest") {
-        setData(latest);
-      }
-      if (sort === "oldest") {
-        setData(oldest);
-      }
-    }
-  }, [originalData, sort]);
-  // langSort
+  // langFilter
   useEffect(() => {
-    if (langSort !== "all") {
-      let sortData = originalData.filter((item) => item.lang === langSort);
-      setData(sortData);
-    }
-    if (langSort === "all") {
-      setData(originalData);
-    }
-  }, [originalData, langSort]);
+    let filterData =
+      langSort === "all"
+        ? originalData
+        : originalData.filter((item) => item.lang === langSort);
+    let sortData = [...filterData].sort((a, b) =>
+      sort === "latest" ? b.date - a.date : a.date - b.date
+    );
+    setData(sortData);
+  }, [langSort]);
+
   return (
     <div>
       <div className="flex">
