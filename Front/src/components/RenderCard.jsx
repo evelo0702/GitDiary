@@ -5,25 +5,20 @@ import remarkGfm from "remark-gfm";
 import axios from "axios";
 const MarkdownRender = () => {
   const { id } = useParams();
+  useEffect(() => {
+    let data = localStorage.getItem("diaryData");
+    const tempData = JSON.parse(data).filter((it) => it._id === id);
+    if (tempData) {
+      setDiaryData({
+        ...tempData[0],
+        date: new Date(tempData[0].date).toISOString().slice(0, 10),
+      });
+    }
+  }, []);
   const navigate = useNavigate();
   const [diaryData, setDiaryData] = useState();
   let markdown;
-  const loadData = async () => {
-    const result = await axios.get(
-      `http://localhost:8000/diary/detail?id=${id}`
-    );
-    let tempData = result.data[0];
-    if (tempData) {
-      setDiaryData({
-        ...tempData,
-        date: new Date(tempData.date).toISOString().slice(0, 10),
-      });
-    }
-  };
 
-  useEffect(() => {
-    loadData();
-  }, []);
   if (diaryData) {
     markdown = `
 
