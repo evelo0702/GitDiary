@@ -6,7 +6,6 @@ const SortMenu = ({
   langChange,
   langSortOption,
 }) => {
-  // 최신순 오래된순 필터랑 언어필터 동시 적용 처리 필요 *****
   return (
     <div className="flex flex-start ms-4 text-2xl">
       <select

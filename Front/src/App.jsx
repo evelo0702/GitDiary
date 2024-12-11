@@ -14,9 +14,7 @@ function App() {
   useEffect(() => {
     setGitData(JSON.parse(localStorage.getItem("userData")));
   }, []);
-  useEffect(() => {
-    console.log(diaryData);
-  }, [diaryData]);
+
   return (
     <StateContext.Provider
       value={{ diaryData, setDiaryData, gitData, setGitData }}
