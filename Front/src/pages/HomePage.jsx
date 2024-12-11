@@ -165,7 +165,7 @@ const HomePage = () => {
           />
           {gitData && (
             <button
-              className="bg-indigo-300 hover:bg-indigo-950 whitespace-nowrap border w-1/4
+              className="bg-slate-600 black hover:bg-indigo-950 whitespace-nowrap border w-1/4
           rounded-lg text-white p-1"
               onClick={() => navigate("/New")}
             >
